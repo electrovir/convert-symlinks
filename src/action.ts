@@ -1,5 +1,5 @@
-import {link, readdir, readlink, rm} from 'node:fs/promises';
-import {join} from 'node:path';
+import {readdir, readFile, readlink, rm, writeFile} from 'node:fs/promises';
+import {dirname, join, resolve} from 'node:path';
 
 export const ignoredPaths = [
     'node_modules',
@@ -17,9 +17,10 @@ export async function convertAllSymlinks(startDirPath: string): Promise<void> {
 
             const childPath = join(startDirPath, child.name);
             if (child.isSymbolicLink()) {
-                const targetPath = await readlink(childPath);
+                const targetPath = resolve(dirname(childPath), await readlink(childPath));
                 await rm(childPath);
-                await link(targetPath, childPath);
+                const originalFileContents = await readFile(targetPath);
+                await writeFile(childPath, originalFileContents);
             } else if (child.isDirectory()) {
                 await convertAllSymlinks(childPath);
             }
