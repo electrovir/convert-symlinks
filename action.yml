@@ -1,0 +1,8 @@
+name: 'convert-symlinks'
+description: 'Convert all symlinks into hard links when on Windows.'
+branding:
+    icon: 'link'
+    color: 'blue'
+runs:
+    using: 'node20'
+    main: 'src/action.js'
