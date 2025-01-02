@@ -28,12 +28,14 @@ export async function convertAllSymlinks(startDirPath: string): Promise<void> {
 }
 
 export const platformsWithoutSymlinkSupport = [
-    'win',
+    'win32',
 ];
 
-/* node:coverage ignore next 11: cannot test this because it depends on the current system platform */
+/* node:coverage disable: cannot test this because it depends on the current system platform */
 export async function runAction(repoDir: string) {
+    console.info(`Current platform: ${process.platform}`);
     if (platformsWithoutSymlinkSupport.includes(process.platform)) {
+        console.info('Converting symlinks...');
         await convertAllSymlinks(repoDir);
         console.info('Symlink conversion successful.');
     } else {
